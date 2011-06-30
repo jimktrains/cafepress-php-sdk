@@ -2,7 +2,7 @@
 /**
  * Project: CafePress PHP SDK
  *
- * This file is part of CafePressApiProducts.
+ * This file is part of CafePress PHP SDK.
  *
  * CafePress PHP SDK is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,6 +125,7 @@ class CafePressApiProducts
                     foreach ($product->sizes->size as $k => $v) $push['sizes'][] = (string) $v;
 
                     $products[] = $push;
+                    
                 }// end foreach
                 
             }// end foreach
