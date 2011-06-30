@@ -1,15 +1,29 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 /**
+ * Project: CafePress PHP SDK
  *
- * @author
+ * This file is part of CafePressApiProducts.
+ *
+ * CafePress PHP SDK is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * CafePress PHP SDK is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CafePress PHP SDK.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @version v0.0.00b
+ * @copyright 2011-2012
+ * @author Qen Empaces,
+ * @email qempaces@cafepress.com
+ * @date 2011.06.30
  *
  */
+
 class CafePressApiProducts
 {
     const API_HOST      = 'open-api.cafepress.com';
