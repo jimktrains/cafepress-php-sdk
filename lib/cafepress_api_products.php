@@ -156,7 +156,6 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
             'totalProducts' => 0,
             'startResult'   => 0,
             'resultLength'  => 0,
-            'sort'          => 0
         );
         
         foreach ($results as $k => $xml) {
@@ -173,6 +172,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
                         'designUrl'         => (string) $result['marketplaceUrl'],
                         'designImageUrl'    => (string) $result['mediaUrl'],
                         'designId'          => (string) $result['mediaId'],
+                        'merchandiseId'     => (string) $product['productTypeNumber'],
                         'colors'            => array(),
                         'sizes'             => array(),
                     );
