@@ -83,20 +83,17 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
     }
     // ** end ** required iterator functions
 
-    public function __construct(array $config = array())
+    public function __construct($appkey)
     {
         $config = CafePressApi::Config();
         $this->appkey = $config['appkey'];
-        
-        $configurations = array('appkey');
-        foreach ($config as $k => $v) {
-            if (empty($v) || !in_array($k, $configurations) ) continue;
-            $this->$k = $v;
-        }// end foreach
 
-        foreach ($configurations as $k => $v) {
-            if (empty($this->$v)) throw new Exception("{$v} is empty");
-        }// end foreach
+        if (!empty($appkey))
+            $this->appkey = $appkey;
+
+        if (empty($this->appkey))
+            throw new Exception("appkey is empty");
+        
     }
     
     public function __get($name)

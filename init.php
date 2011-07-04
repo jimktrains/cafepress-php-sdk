@@ -58,9 +58,9 @@ class CafePressApi
         return self::$config;
     }
 
-    public static function Products()
+    public static function Products($appkey = '')
     {
-        return new CafePressApiProducts();
+        return new CafePressApiProducts($appkey);
     }
 
 }
