@@ -31,12 +31,14 @@ set_include_path(implode(PATH_SEPARATOR, $paths));
 
 class CafePressApi
 {
-
+    const VERSION   = 3;
+    const HOST      = 'open-api.cafepress.com';
+    
     private static $config = array();
     
     public static function Loader($klass)
     {
-        if (preg_match('|^CafePress|', $klass)){
+        if (preg_match('|^CafePress|', $klass)) {
             preg_match_all('/([A-Z][a-z0-9]+)/', $klass, $matches);
             array_shift($matches[1]);
             $filename = strtolower('cafe'.implode('_', $matches[1])).'.php';
@@ -47,16 +49,16 @@ class CafePressApi
         return false;
     }
 
-    public function Config()
+    public static function Config()
     {
         if (empty(self::$config)) {
             require 'spyc/spyc.php';
-            self::$config = Spyc::YAMLLoad('config.yml');
+            self::$config = Spyc::YAMLLoad(dirname(__FILE__).'/config.yml');
         }//end if
         return self::$config;
     }
 
-    public function Products()
+    public static function Products()
     {
         return new CafePressApiProducts();
     }

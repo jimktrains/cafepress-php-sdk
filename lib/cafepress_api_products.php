@@ -24,7 +24,7 @@
  *
  */
 
-class CafePressApiProducts #implements ArrayAccess
+class CafePressApiProducts implements ArrayAccess, IteratorAggregate
 {
     const API_HOST      = 'open-api.cafepress.com';
     const API_VERSION   = '3';
@@ -34,6 +34,54 @@ class CafePressApiProducts #implements ArrayAccess
     );
 
     private $appkey     = '';
+    private $attr       = array();
+    public  $xml        = array();
+
+    // ** start ** required interface functions
+    public final function offsetExists($offset)
+    {
+        if (is_string($offset)) {
+            $check = ModelActions::Instance()->fieldExists($this, $offset);
+            if ($check) return true;
+
+            $idx = $this->iterator->key();
+            return isset($this->results[$idx][$offset]);
+        }// endif
+
+        $result = isset($this->results[$offset]);
+
+        return isset($this->results[$offset]);
+    }
+
+    public final function offsetGet($offset)
+    {
+        $idx = $this->iterator->key();
+        
+        if (is_string($offset) && $this->offsetExists($offset))
+            return $this->results[$idx][$offset];
+
+        if ($this->offsetExists($offset))
+            return $this->results[$offset];
+        
+        return null;
+    }
+
+    public final function offsetSet($offset, $value)
+    {
+        return true;
+    }
+
+    public final function offsetUnset($offset)
+    {
+        $idx = $this->iterator->key();
+        unset($this->results[$idx][$offset]);
+    }
+
+    public final function getIterator()
+    {
+        return $this->iterator;
+    }
+    // ** end ** required iterator functions
 
     public function __construct(array $config = array())
     {
@@ -50,6 +98,15 @@ class CafePressApiProducts #implements ArrayAccess
             if (empty($this->$v)) throw new Exception("{$v} is empty");
         }// end foreach
     }
+    
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->attr)) {
+            return $this->attr[$name];
+        }//end if
+        
+        return null;
+    }
 
     /**
      *
@@ -65,6 +122,10 @@ class CafePressApiProducts #implements ArrayAccess
         $sort                   = 'by-date-desc';
         extract($options, EXTR_IF_EXISTS);
 
+        $this->xml = array();
+        $this->attr = array();
+        $this->setResult(array());
+
         $get['sort']            = $sort;
         $get['pageNumber']      = $pageNumber;
         $get['resultsPerPage']  = $resultsPerPage;
@@ -77,7 +138,7 @@ class CafePressApiProducts #implements ArrayAccess
 
         $results = array();
         foreach ($query as $k => $v) {
-            if (empty($v)) continue;
+            if (empty($v) || array_key_exists($v, $results)) continue;
             
             $get['query'] = $v;
             $result = $this->curly('product.search.cp', array(
@@ -86,15 +147,24 @@ class CafePressApiProducts #implements ArrayAccess
 
             if (empty($result['response'])) continue;
 
-           $results[] = $result['response'];
-
+           $results[$v] = $result['response'];
         }// end foreach
         
-        if (empty($results)) return array();
+        if (empty($results)) return $this;
         
-        $products = array();
+        $products   = array();
+        $xmldoc     = array();
+        $this->attr = array(
+            'totalDesigns'  => 0,
+            'totalProducts' => 0,
+            'startResult'   => 0,
+            'resultLength'  => 0,
+            'sort'          => 0
+        );
+        
         foreach ($results as $k => $xml) {
             $xml = new SimpleXMLElement($xml);
+            $this->xml[$k] = $xml;
             
             $loop = $xml->xpath('/searchResultSet/mainResults/searchResultItem');
             foreach ($loop as $k => $result) {
@@ -124,9 +194,17 @@ class CafePressApiProducts #implements ArrayAccess
                 }// end foreach
                 
             }// end foreach
+
+            $this->attr['totalDesigns'] += $xml['totalDesigns'];
+            $this->attr['totalProducts']+= $xml['totalProducts'];
+            $this->attr['startResult']  += $xml['startResult'];
+            $this->attr['resultLength'] += $xml['resultLength'];
+            $this->attr['totalDesigns'] += $xml['totalDesigns'];
+
         }// end foreach
 
-        return $products;
+        $this->setResult($products);
+        return $this;
     }
 
     /**
@@ -179,7 +257,7 @@ class CafePressApiProducts #implements ArrayAccess
         
         extract($options, EXTR_IF_EXISTS);
 
-        $api_host = self::API_HOST;
+        $api_host = CafePressApi::HOST;
         $url = "http://{$api_host}/{$uri}";
         
         /**
@@ -196,7 +274,7 @@ class CafePressApiProducts #implements ArrayAccess
          * process parameters
          */
         if (!empty($post)) {
-            $post['v']      = self::API_VERSION;
+            $post['v']      = CafePressApi::VERSION;
             $post['appKey'] = $this->appkey;
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post, '', '&'));
@@ -296,6 +374,13 @@ class CafePressApiProducts #implements ArrayAccess
         }//end if
 
         return $retval;
+    }
+
+    private function setResult($results)
+    {
+        $this->results = $results;
+        $this->iterator = new ArrayIterator($this->results);
+        $this->iterator->rewind();
     }
 
 }
