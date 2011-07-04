@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CafePress PHP SDK.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @version v0.0.00b
+ * @version v0.0.01b
  * @copyright 2011-2012
  * @author Qen Empaces,
  * @email qempaces@cafepress.com
@@ -24,28 +24,23 @@
  *
  */
 
-class CafePressApiProducts
+class CafePressApiProducts #implements ArrayAccess
 {
     const API_HOST      = 'open-api.cafepress.com';
     const API_VERSION   = '3';
-    
+
     public static $Config = array(
         'appkey'    => '',
-        'email'     => '',
-        'password'  => ''
     );
 
     private $appkey     = '';
-    private $email      = '';
-    private $password   = '';
 
     public function __construct(array $config = array())
     {
-        $this->appkey   = self::$Config['appkey'];
-        $this->email    = self::$Config['email'];
-        $this->password = self::$Config['password'];
+        $config = CafePressApi::Config();
+        $this->appkey = $config['appkey'];
         
-        $configurations = array('appkey', 'email', 'password');
+        $configurations = array('appkey');
         foreach ($config as $k => $v) {
             if (empty($v) || !in_array($k, $configurations) ) continue;
             $this->$k = $v;
@@ -181,10 +176,10 @@ class CafePressApiProducts
         $get                = array();
 
         $timeout            = 18;
-        $api_host           = self::API_HOST;
         
         extract($options, EXTR_IF_EXISTS);
 
+        $api_host = self::API_HOST;
         $url = "http://{$api_host}/{$uri}";
         
         /**
