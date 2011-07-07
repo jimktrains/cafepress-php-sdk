@@ -36,11 +36,13 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
     private $appkey     = '';
     private $attr       = array();
 
+    public $xmlresults  = array();
+
     // ** start ** required interface functions
     public final function offsetExists($offset)
     {
         if (is_string($offset)) {
-            if (preg_match('|^:xml\.|', $offset)) return false;
+            //if (preg_match('|^:xml\.|', $offset)) return false;
             
             $idx = $this->iterator->key();
             return isset($this->results[$idx][$offset]);
@@ -93,14 +95,9 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
     }
     
     public function __get($name)
-    {
+    {   
         if (array_key_exists($name, $this->attr)) {
             return $this->attr[$name];
-        }//end if
-
-        if ($name == 'xml') {
-            $idx = $this->iterator->key();
-            return $this->results[$idx][':xml.product'];
         }//end if
         
         return null;
@@ -113,7 +110,6 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
      */
     public function __isset($name)
     {
-        if ($name == 'xml') return true;
         return array_key_exists($name, $this->attr);
     }
 
@@ -168,11 +164,15 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
             'startResult'   => 0,
             'resultLength'  => 0,
         );
+
+        $this->xmlresults = array();
         
         foreach ($results as $k => $xml) {
             $xml = new SimpleXMLElement($xml);
+            $this->xmlresults[$k] = $xml;
             
             $loop = $xml->xpath('/searchResultSet/mainResults/searchResultItem');
+            
             foreach ($loop as $k => $result) {
                 $result_products = $result->xpath('products/product');
 
@@ -200,7 +200,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
                     unset($push['productTypeNumber']);
                     unset($push['productNumber']);
                     
-                    $push[':xml.product'] = $product;
+                    $push[':xml'] = $product;
                     $products[] = $push;
                     
                 }// end foreach

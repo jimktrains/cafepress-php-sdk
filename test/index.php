@@ -23,6 +23,20 @@ class TestCafePressApiProducts extends UnitTestCase {
         $this->assertTrue(isset($products['productId']));
         $this->assertTrue(isset($products['merchandiseId']));
         $this->assertTrue(isset($products['designId']));
+        
+        /**
+         * :xml key is the product simple xml element object
+         */
+        $this->assertTrue($products[':xml'] instanceof SimpleXMLElement);
+
+        /**
+         * xmlresults contains all the simple xml element
+         * object that was called from get method
+         */
+        foreach ($products->xmlresults as $k => $v) 
+            $this->assertTrue($v instanceof SimpleXMLElement);
+
+        $this->assertTrue($products[':xml'] instanceof SimpleXMLElement);
 
         $total_loop = $products->resultLength ;
         $loop = 0;
@@ -31,6 +45,7 @@ class TestCafePressApiProducts extends UnitTestCase {
             $this->assertTrue(isset($v['productId']));
             $this->assertTrue(isset($v['merchandiseId']));
             $this->assertTrue(isset($v['designId']));
+            $this->assertTrue($v[':xml'] instanceof SimpleXMLElement);
         }// end foreach
 
         $this->assertEqual($loop, $total_loop);
@@ -40,7 +55,7 @@ class TestCafePressApiProducts extends UnitTestCase {
         $this->assertTrue(isset($products->totalProducts));
         $this->assertTrue(isset($products->totalDesigns));
         $this->assertTrue(isset($products->xml));
-        $this->assertTrue($products->xml instanceof SimpleXMLElement);
+        
 
         $this->assertEqual($length, $products->resultLength);
         $this->assertEqual($length, $loop);
