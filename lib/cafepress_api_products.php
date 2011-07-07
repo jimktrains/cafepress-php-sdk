@@ -111,6 +111,17 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
      * @access
      * @var
      */
+    public function __isset($name)
+    {
+        if ($name == 'xml') return true;
+        return array_key_exists($name, $this->attr);
+    }
+
+    /**
+     *
+     * @access
+     * @var
+     */
     public function get($query, array $options = array())
     {
         $pageNumber             = 1;
