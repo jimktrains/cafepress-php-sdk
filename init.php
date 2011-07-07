@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CafePress PHP SDK.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @version v0.0.01b
+ * @version v0.01b
  * @copyright 2011-2012
  * @author Qen Empaces,
  * @email qempaces@cafepress.com

@@ -35,20 +35,16 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
 
     private $appkey     = '';
     private $attr       = array();
-    public  $xml        = array();
 
     // ** start ** required interface functions
     public final function offsetExists($offset)
     {
         if (is_string($offset)) {
-            $check = ModelActions::Instance()->fieldExists($this, $offset);
-            if ($check) return true;
-
+            if (preg_match('|^:xml\.|', $offset)) return false;
+            
             $idx = $this->iterator->key();
             return isset($this->results[$idx][$offset]);
         }// endif
-
-        $result = isset($this->results[$offset]);
 
         return isset($this->results[$offset]);
     }
@@ -101,6 +97,11 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
         if (array_key_exists($name, $this->attr)) {
             return $this->attr[$name];
         }//end if
+
+        if ($name == 'xml') {
+            $idx = $this->iterator->key();
+            return $this->results[$idx][':xml.product'];
+        }//end if
         
         return null;
     }
@@ -150,7 +151,6 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
         if (empty($results)) return $this;
         
         $products   = array();
-        $xmldoc     = array();
         $this->attr = array(
             'totalDesigns'  => 0,
             'totalProducts' => 0,
@@ -160,7 +160,6 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
         
         foreach ($results as $k => $xml) {
             $xml = new SimpleXMLElement($xml);
-            $this->xml[$k] = $xml;
             
             $loop = $xml->xpath('/searchResultSet/mainResults/searchResultItem');
             foreach ($loop as $k => $result) {
@@ -173,6 +172,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
                         'designImageUrl'    => (string) $result['mediaUrl'],
                         'designId'          => (string) $result['mediaId'],
                         'merchandiseId'     => (string) $product['productTypeNumber'],
+                        'productId'         => (string) $product['productNumber'],
                         'colors'            => array(),
                         'sizes'             => array(),
                     );
@@ -186,6 +186,10 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
                     foreach ($product->colors->color as $k => $v) $push['colors'][] = (string) $v;
                     foreach ($product->sizes->size as $k => $v) $push['sizes'][] = (string) $v;
 
+                    unset($push['productTypeNumber']);
+                    unset($push['productNumber']);
+                    
+                    $push[':xml.product'] = $product;
                     $products[] = $push;
                     
                 }// end foreach
