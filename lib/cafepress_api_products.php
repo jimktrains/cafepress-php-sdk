@@ -224,9 +224,83 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
      * @access
      * @var
      */
-    public function get_by_productids($query, array $options = array())
+    public function get_by_productids($query)
     {
+        $this->xml = array();
+        $this->attr = array();
+        $this->setResult(array());
 
+        if (empty($query)) throw new Exception('query empty');
+        if (!is_array($query)) $query = array($query);
+
+        $results = array();
+        foreach ($query as $k => $v) {
+            if (empty($v) || array_key_exists($v, $results)) continue;
+
+            $get = array('id' => $v);
+            $result = $this->curly('product.find.cp', array(
+                'get' => $get
+            ));
+
+            if (empty($result['response'])) continue;
+
+           $results[$v] = $result['response'];
+        }// end foreach
+
+        if (empty($results)) return $this;
+
+        $products   = array();
+        $this->attr = array(
+            'totalDesigns'  => 0,
+            'totalProducts' => 0,
+            'startResult'   => 0,
+            'resultLength'  => 0,
+        );
+
+        $this->xmlresults = array();
+
+        foreach ($results as $k => $xml) {
+            $xml = new SimpleXMLElement($xml);
+            $this->xmlresults[$k] = $xml;
+
+            $product = $xml->xpath('/product');
+
+            $push = array(
+                'designUrl'         => (string) $result['marketplaceUrl'],
+                'designImageUrl'    => (string) $result['mediaUrl'],
+                'designId'          => (string) $result['mediaId'],
+                'merchandiseId'     => (string) $product['merchandiseId'],
+                'productId'         => (string) $product['id'],
+                'colors'            => array(),
+                'sizes'             => array(),
+            );
+
+            $attr = $product->attributes();
+            foreach ($attr as $k => $v) $push[$k] = (string) $v;
+
+            /**
+             * colors and sizes
+             */
+            foreach ($product->colors->color as $k => $v) $push['colors'][] = (string) $v;
+            foreach ($product->sizes->size as $k => $v) $push['sizes'][] = (string) $v;
+
+            unset($push['productTypeNumber']);
+            unset($push['productNumber']);
+
+            $push[':xml'] = $product;
+            $products[] = $push;
+
+
+            $this->attr['totalDesigns'] += $xml['totalDesigns'];
+            $this->attr['totalProducts']+= $xml['totalProducts'];
+            $this->attr['startResult']  += $xml['startResult'];
+            $this->attr['resultLength'] += $xml['resultLength'];
+            $this->attr['totalDesigns'] += $xml['totalDesigns'];
+
+        }// end foreach
+
+        $this->setResult($products);
+        return $this;
     }
 
     /**
