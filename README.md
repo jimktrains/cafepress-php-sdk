@@ -13,6 +13,7 @@ CafePress Api SDK for PHP
 
     # TLDR Usage example
 
+
     include "init.php";
     $products = CafePressApi::Products([cafepress api developer key])->get([search string], [options]);
     foreach($products as $k => $v) {
