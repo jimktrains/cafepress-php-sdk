@@ -36,8 +36,8 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
     private $appkey     = '';
     private $attr       = array();
 
-    public $results     = null;
-    public $iterator    = null;
+    private $results     = null;
+    private $iterator    = null;
     
     public $xmlresults  = array();
 
