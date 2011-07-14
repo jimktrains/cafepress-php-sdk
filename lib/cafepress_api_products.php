@@ -36,6 +36,9 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
     private $appkey     = '';
     private $attr       = array();
 
+    public $results     = null;
+    public $iterator    = null;
+    
     public $xmlresults  = array();
 
     // ** start ** required interface functions
@@ -184,6 +187,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
                         'designId'          => (string) $result['mediaId'],
                         'merchandiseId'     => (string) $product['productTypeNumber'],
                         'productId'         => (string) $product['productNumber'],
+                        'name'              => (string) $product['caption'],
                         'colors'            => array(),
                         'sizes'             => array(),
                     );
@@ -199,6 +203,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
 
                     unset($push['productTypeNumber']);
                     unset($push['productNumber']);
+                    unset($push['caption']);
                     
                     $push[':xml'] = $product;
                     $products[] = $push;
@@ -317,18 +322,26 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
      */
     public function get_by_storeid($query, array $options = array())
     {
+        $pageNumber             = 1;
+        $resultsPerPage         = 20;
+        extract($options, EXTR_IF_EXISTS);
+        
         $this->xml = array();
         $this->attr = array();
         $this->setResult(array());
 
         if (empty($query)) throw new Exception('query empty');
         if (!is_array($query)) $query = array($query);
-
+        
         $results = array();
         foreach ($query as $k => $v) {
             if (empty($v) || array_key_exists($v, $results)) continue;
 
-            $get = array('id' => $v);
+            $get = array(
+                'storeId'   => $v,
+                'page'      => $pageNumber,
+                'pageSize'  => $resultsPerPage,
+            );
             $result = $this->curly('product.listByStore.cp', array(
                 'get' => $get
             ));
@@ -354,9 +367,9 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
             $xml = new SimpleXMLElement($xml);
             $this->xmlresults[$k] = $xml;
 
-            $products = $xml->xpath('/products/product');
+            $loop = $xml->xpath('/products/product');
 
-            foreach ($products as $k => $product) {
+            foreach ($loop as $k => $product) {
                 $products[] = $this->build_product_result($product);
 
                 $this->attr['totalProducts']+= 1;
@@ -387,7 +400,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
         foreach ($query as $k => $v) {
             if (empty($v) || array_key_exists($v, $results)) continue;
 
-            $get = array('id' => $v);
+            $get = array('designId' => $v);
             $result = $this->curly('product.findByDesignId.cp', array(
                 'get' => $get
             ));
@@ -413,9 +426,9 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
             $xml = new SimpleXMLElement($xml);
             $this->xmlresults[$k] = $xml;
 
-            $products = $xml->xpath('/products/product');
+            $loop = $xml->xpath('/products/product');
 
-            foreach ($products as $k => $product) {
+            foreach ($loop as $k => $product) {
                 $products[] = $this->build_product_result($product);
 
                 $this->attr['totalProducts']+= 1;
@@ -423,7 +436,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
             }//end foreach
 
         }// end foreach
-
+        
         $this->setResult($products);
         return $this;
     }
