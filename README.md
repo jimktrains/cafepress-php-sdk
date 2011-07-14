@@ -13,33 +13,31 @@ CafePress Api SDK for PHP
 
 # TLDR Usage example
 
-```php
-include "init.php";
-$products = CafePressApi::Products([cafepress api developer key])->get([search string], [options]);
-foreach($products as $k => $v) {
-    var_export($v);
-}
-```
+    include "init.php";
+    $products = CafePressApi::Products([cafepress api developer key])->get([search string], [options]);
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
+
 
 
 
 # Configuration
 rename the *config.yml.sample* to config.yml and specify the appkey value
 
-```yaml
-appkey: [you're cafepress api developer key]
-```
+
+    appkey: [you're cafepress api developer key]
+
 
 by default the appkey value in the config.yml will be used to connect to cafepress api,
 however you can override this value in the code by passing the appkey value, example
 
-```php
-include "init.php";
-$products = CafePressApi::Products([appkey key here])->get([search string], [options]);
-foreach($products as $k => $v) {
-    var_export($v);
-}
-```
+
+    include "init.php";
+    $products = CafePressApi::Products([appkey key here])->get([search string], [options]);
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
 
 
@@ -49,10 +47,8 @@ Will search the cafepress product names that matches the search string
 
 ### Syntax
 
-```php
-include "init.php";
-$products = CafePressApi::Products()->get(search[, options]);
-```
+    CafePressApi::Products()->get(search[, options]);
+
 
 ### Arguments
 - search - (_String_ or _Array of String_) The product name search criteria,
@@ -65,20 +61,18 @@ $products = CafePressApi::Products()->get(search[, options]);
 - merchandiseIds - (_Numeric_ : default to null) additional criteria to limit the results per mechandise id
 
 #### Example
-```php
-include "init.php";
 
-$products = CafePressApi::Products()->get('foobar', array('pageNumber' => 1));
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    include "init.php";
 
-$products = CafePressApi::Products()->get(array('foobar', 'barfoo'), array('pageNumber' => 2));
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    $products = CafePressApi::Products()->get('foobar', array('pageNumber' => 1));
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
-```
+    $products = CafePressApi::Products()->get(array('foobar', 'barfoo'), array('pageNumber' => 2));
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
 
 
@@ -88,28 +82,24 @@ Will search the cafepress product by product ids
 
 ### Syntax
 
-```php
-CafePressApi::Products()->get_by_productids(search);
-```
+    CafePressApi::Products()->get_by_productids(search);
 
 ### Arguments
 - search - (_Numeric_ or _Array of Number_) The product ids to search
 
 #### Example
-```php
-include "init.php";
 
-$products = CafePressApi::Products()->get_by_productids(1234);
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    include "init.php";
 
-$products = CafePressApi::Products()->get_by_productids(array(1234, 4567, 7789));
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    $products = CafePressApi::Products()->get_by_productids(1234);
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
-```
+    $products = CafePressApi::Products()->get_by_productids(array(1234, 4567, 7789));
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
 
 
@@ -119,28 +109,25 @@ Returns all cafepress products by design id
 
 ### Syntax
 
-```php
-CafePressApi::Products()->get_by_designids(design_id);
-```
+    CafePressApi::Products()->get_by_designids(design_id);
 
 ### Arguments
 - design_id - (_Numeric_ or _Array of Number_) The design ids to search
 
 #### Example
-```php
-include "init.php";
 
-$products = CafePressApi::Products()->get_by_designids(1234);
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    include "init.php";
 
-$products = CafePressApi::Products()->get_by_designids(array(1234, 4567, 7789));
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    $products = CafePressApi::Products()->get_by_designids(1234);
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
-```
+    $products = CafePressApi::Products()->get_by_designids(array(1234, 4567, 7789));
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
+
 
 
 
@@ -150,9 +137,7 @@ Returns all cafepress products by store id
 
 ### Syntax
 
-```php
-CafePressApi::Products()->get_by_storeid(store_id[, options]);
-```
+    CafePressApi::Products()->get_by_storeid(store_id[, options]);
 
 ### Arguments
 - store_id - (_String_) A valid cafepress store id
@@ -163,15 +148,13 @@ CafePressApi::Products()->get_by_storeid(store_id[, options]);
 - resultsPerPage - (_Numeric_ : defaults to 20 ) the number of results per page
 
 #### Example
-```php
-include "init.php";
 
-$products = CafePressApi::Products()->get_by_storeid('myfoobarstore', array('pageNumber' => 1, 'resultsPerPage' => 10 ));
-foreach($products as $k => $v) {
-    var_export($v);
-}
+    include "init.php";
 
-```
+    $products = CafePressApi::Products()->get_by_storeid('myfoobarstore', array('pageNumber' => 1, 'resultsPerPage' => 10 ));
+    foreach($products as $k => $v) {
+        var_export($v);
+    }
 
 ## CafePressApi::Products.is_empty
 
@@ -179,6 +162,4 @@ Returns true if there's results from the last api call
 
 ### Syntax
 
-```php
-CafePressApi::Products()->is_empty();
-```
+    CafePressApi::Products()->is_empty();
