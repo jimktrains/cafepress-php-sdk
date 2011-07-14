@@ -121,6 +121,16 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
      * @access
      * @var
      */
+    public function is_empty()
+    {
+        return empty($this->results);
+    }
+
+    /**
+     *
+     * @access
+     * @var
+     */
     public function get($query, array $options = array())
     {
         $pageNumber             = 1;
