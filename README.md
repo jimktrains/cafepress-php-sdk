@@ -11,7 +11,7 @@ CafePress Api SDK for PHP
 
 
 
-# TLDR Usage example
+# TLDR
 
 
     include "init.php";
