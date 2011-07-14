@@ -10,6 +10,7 @@ CafePress Api SDK for PHP
 - CafePress API developer key
 
 
+
 # TLDR Usage example
 
 ```php
@@ -19,6 +20,7 @@ foreach($products as $k => $v) {
     var_export($v);
 }
 ```
+
 
 
 # Configuration
