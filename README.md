@@ -52,16 +52,16 @@ Will search the cafepress product names that matches the search string
 
 
 ### Arguments
-- search - (_String_ or _Array of String_) The product name search criteria,
-- options - (_Array_) An array with options for the method, see below
+- search - ( _String_ or _Array of String_ ) The product name search criteria,
+- options - ( _Array_, optional ) An array with options for the method, see below
 
 ### Options
-- pageNumber - (_Numeric_ : defaults to 1) the page for the results, default = 1
-- resultsPerPage - (_Numeric_ : defaults to 20 ) the number of results per page
-- maxProductsPerDesign (_Numeric_ : defaults to 1) the maximum number of products per design
-- merchandiseIds - (_Numeric_ : default to null) additional criteria to limit the results per mechandise id
+- pageNumber - ( _Numeric_ : defaults to 1 ) the page for the results, default = 1
+- resultsPerPage - ( _Numeric_ : defaults to 20 ) the number of results per page
+- maxProductsPerDesign ( _Numeric_ : defaults to 1 ) the maximum number of products per design
+- merchandiseIds - ( _Numeric_ : default to null ) additional criteria to limit the results per mechandise id
 
-#### Example
+### Example
 
     include "init.php";
 
@@ -86,9 +86,9 @@ Will search the cafepress product by product ids
     CafePressApi::Products()->get_by_productids(search);
 
 ### Arguments
-- search - (_Numeric_ or _Array of Number_) The product ids to search
+- search - ( _Numeric_ or _Array of Numbers_ ) The product ids to search
 
-#### Example
+### Example
 
     include "init.php";
 
@@ -113,9 +113,9 @@ Returns all cafepress products by design id
     CafePressApi::Products()->get_by_designids(design_id);
 
 ### Arguments
-- design_id - (_Numeric_ or _Array of Number_) The design ids to search
+- design_id - ( _Numeric_ or _Array of Number_ ) The design ids to search
 
-#### Example
+### Example
 
     include "init.php";
 
@@ -141,14 +141,14 @@ Returns all cafepress products by store id
     CafePressApi::Products()->get_by_storeid(store_id[, options]);
 
 ### Arguments
-- store_id - (_String_) A valid cafepress store id
-- options - (_Array_) An array with options for the method, see below
+- store_id - ( _String_ ) A valid cafepress store id
+- options - ( _Array_, optional ) An array with options for the method, see below
 
 ### Options
 - pageNumber - (_Numeric_ : defaults to 1) the page for the results, default = 1
 - resultsPerPage - (_Numeric_ : defaults to 20 ) the number of results per page
 
-#### Example
+### Example
 
     include "init.php";
 
@@ -159,7 +159,7 @@ Returns all cafepress products by store id
 
 ## CafePressApi::Products.is_empty
 
-Returns true if there's results from the last api call
+Returns true if there's no results from the last api call
 
 ### Syntax
 
