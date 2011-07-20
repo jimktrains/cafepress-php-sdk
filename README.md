@@ -20,7 +20,7 @@ CafePress Api SDK for PHP
         var_export($v);
     }
 
-
+see demo.php for full example
 
 
 # Configuration
