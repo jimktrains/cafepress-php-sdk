@@ -87,16 +87,16 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
     public function __construct($appkey)
     {
         $config = CafePressApi::Config();
-        $this->appkey = $config['appkey'];
+        $this->appkey = isset($config['appkey']) ? $config['appkey'] : NULL;
 
         if (!empty($appkey))
             $this->appkey = $appkey;
 
         if (empty($this->appkey))
             throw new Exception("appkey is empty");
-        
+
     }
-    
+
     public function __get($name)
     {   
         if (array_key_exists($name, $this->attr)) {
@@ -352,7 +352,7 @@ class CafePressApiProducts implements ArrayAccess, IteratorAggregate
                 'page'      => $pageNumber,
                 'pageSize'  => $resultsPerPage,
             );
-            $result = $this->curly('product.listByStore.cp', array(
+            $result = $this->curly('product.listDeepByStore.cp', array(
                 'get' => $get
             ));
 
